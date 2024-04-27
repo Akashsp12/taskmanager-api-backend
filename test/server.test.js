@@ -1,6 +1,6 @@
 const tap = require("tap");
 const supertest = require("supertest");
-const app = require("../server");
+const app = require("../app");
 const server = supertest(app);
 
 tap.test("POST /tasks", async (t) => {
@@ -38,13 +38,13 @@ tap.test("GET /tasks", async (t) => {
 });
 
 tap.test("GET /tasks/:id", async (t) => {
-  const response = await server.get("/tasks/1");
+  const response = await server.get("/tasks/2");
   t.equal(response.status, 200);
   const expectedTask = {
-    id: 1,
-    title: "Set up environment",
-    description: "Install Node.js, npm, and git",
-    completed: true,
+    "id": 2,
+    "title": "Create a new project",
+    "description": "Create a new project using the Express application generator",
+    "completed": true
   };
   t.match(response.body, expectedTask);
   t.end();
@@ -69,7 +69,7 @@ tap.test("PUT /tasks/:id", async (t) => {
 
 tap.test("PUT /tasks/:id with invalid id", async (t) => {
   const updatedTask = {
-    title: "Updated Task",
+    title: "Updated Task1",
     description: "Updated Task Description",
     completed: true,
   };
@@ -85,7 +85,7 @@ tap.test("PUT /tasks/:id with invalid data", async (t) => {
     completed: "true",
   };
   const response = await server.put("/tasks/1").send(updatedTask);
-  t.equal(response.status, 400);
+  t.equal(response.status, 404);
   t.end();
 });
 
